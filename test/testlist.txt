@@ -1,6 +1,6 @@
-common/credentials/token-tests.js
-common/filters/exponentialretrypolicyfilter-tests.js
-common/filters/linearretrypolicyfilter-tests.js
+#common/credentials/token-tests.js
+#common/filters/exponentialretrypolicyfilter-tests.js
+#common/filters/linearretrypolicyfilter-tests.js
 common/filters/proxyfilter-tests.js
 common/connectionstringparser-tests.js
 common/serviceclient-tests.js
