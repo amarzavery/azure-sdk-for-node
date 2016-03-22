@@ -77,7 +77,8 @@ describe('Batch Service', function () {
   after(function (done) {
     suite.teardownSuite(done);
   });
-    beforeEach(function (done) {
+
+  beforeEach(function (done) {
     suite.setupTest(done);
   });
   
@@ -86,7 +87,7 @@ describe('Batch Service', function () {
   });
 
   describe('operations', function () {
-    
+
     it('should add new certificate successfully', function (done) {
       var options = {
         thumbprint: certThumb, thumbprintAlgorithm: 'sha1', password: 'nodesdk', certificateFormat: 'pfx',
@@ -311,13 +312,13 @@ describe('Batch Service', function () {
     });
 
     it('should enable autoscale successfully', function (done) {
-      var options = { autoScaleFormula: '$TargetDedicated=2', autoScaleEvaluationInterval: moment.duration({ minutes: 6 }) };
-      client.pool.enableAutoScale('nodesdktestpool1', options, function (err, result, request, response) {
-        should.not.exist(err);
-        should.not.exist(result);
-        response.statusCode.should.equal(200);
-        done();
-      });
+
+      var mapper = { type : { name: 'TimeSpan' } };
+      var duration = moment.duration({ minutes: 6 });
+      var serializedDateString = msRest.serialize(mapper, duration, 'dateTimeObj');
+      var requestModel = client.serialize(mapper, duration, 'dateTimeObj');
+      done();
+      
     });
     
     it('should evaluate pool autoscale successfully', function (done) {
