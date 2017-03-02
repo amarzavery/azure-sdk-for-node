@@ -179,7 +179,7 @@ var mappings = {
   }
 };
 
-var defaultAutoRestVersion = '1.0.0-Nightly20161212';
+var defaultAutoRestVersion = '1.0.0-Nightly20170212';
 var usingAutoRestVersion;
 var specRoot = args['spec-root'] || "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/master";
 var project = args['project'];
@@ -194,7 +194,7 @@ function clrCmd(cmd){
 };
 
 function constructAutorestExePath(version) {
-  return path.join('packages', 'Autorest.' + version, 'tools', 'AutoRest.exe');
+  return path.join('packages', 'Autorest.' + version, 'tools', 'AutoRest.dll');
 }
 function codegen(project, cb) {
   var found = false;
@@ -240,7 +240,7 @@ function generateProject(project, specRoot, autoRestVersion) {
   console.log(util.format('Generating "%s" from spec file "%s" with language "%s" and AutoRest version "%s".', 
     project,  specRoot + '/' + mappings[project].source, language, autoRestVersion));
   autoRestExe = constructAutorestExePath(autoRestVersion);
-  var cmd = util.format('%s -Modeler %s -CodeGenerator %s -Input %s  -outputDirectory lib/services/%s -Header MICROSOFT_MIT_NO_VERSION',
+  var cmd = util.format('dotnet %s -Modeler %s -CodeGenerator %s -Input %s  -outputDirectory lib/services/%s -Header MICROSOFT_MIT_NO_VERSION',
     autoRestExe, currentModeler, language, specPath, mappings[project].dir);
   if (mappings[project].ft !== null && mappings[project].ft !== undefined) cmd += ' -FT ' + mappings[project].ft;
   if (mappings[project].ClientName !== null && mappings[project].ClientName !== undefined) cmd += ' -ClientName ' + mappings[project].ClientName;
