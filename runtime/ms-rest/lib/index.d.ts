@@ -49,6 +49,14 @@ export class ServiceClient {
   constructor(credentials?: ServiceClientCredentials, options?: ServiceClientOptions);
 }
 
+/**
+ * Service Error that is returned when an error occurrs in executing the REST request initiated by the service client.
+ * 
+ * @property {number} [statusCode]             - The response status code received from the server as a result of making the request.
+ * @property {WebResource} request             - The raw/actual request sent to the server.
+ * @property {http.IncomingMessage}  response  - The raw/actual response from the server.
+ * @property {any}  body                       - The response body.
+ */
 export interface ServiceError extends Error {
   statusCode: number;
   request: WebResource;
@@ -56,7 +64,15 @@ export interface ServiceError extends Error {
   body: any;
 }
 
-export interface ServiceCallback<TResult> { (err: Error | ServiceError, result: TResult, request: WebResource, response: http.IncomingMessage): void }
+/**
+ * Service callback that is returned for REST requests initiated by the service client.
+ * 
+ * @property {Error|ServiceError} err         - The error occurred if any, while executing the request; otherwise null
+ * @property {TResult} result                 - The deserialized response body if an error did not occur.
+ * @property {WebResource}  request           - The raw/actual request sent to the server if an error did not occur.
+ * @property {http.IncomingMessage} response  - The raw/actual response from the server if an error did not occur.
+ */
+export interface ServiceCallback<TResult> { (err: Error|ServiceError, result?: TResult, request?: WebResource, response?: http.IncomingMessage): void }
 
 /**
  * Creates a new 'ExponentialRetryPolicyFilter' instance.
@@ -77,139 +93,6 @@ export class ExponentialRetryPolicyFilter {
  */
 export class WebResource {
   constructor();
-
-    /**
-     * Creates a new put request web resource.
-     *
-     * @param {string} path The path for the put operation.
-     * @return {WebResource} A new WebResource with a put operation for the given path.
-     */
-    static put(path: string): WebResource;
-
-    /**
-     * Creates a new get request web resource.
-     *
-     * @param {string} path The path for the get operation.
-     * @return {WebResource} A new WebResource with a get operation for the given path.
-     */
-    static get(path: string): WebResource;
-    
-    /**
-     * Creates a new head request web resource.
-     *
-     * @param {string} path The path for the head operation.
-     * @return {WebResource} A new WebResource with a head operation for the given path.
-     */
-    static head(path: string): WebResource;
-
-    /**
-     * Creates a new delete request web resource.
-     *
-     * @param {string} path The path for the delete operation.
-     * @return {WebResource} A new WebResource with a delete operation for the given path.
-     */
-    static del(path: string): WebResource;
-  
-  /**
-   * Creates a new post request web resource.
-   *
-   * @param {string} path The path for the post operation.
-   * @return {WebResource} A new WebResource with a post operation for the given path.
-   */
-  static post(path: string): WebResource;
-
-  /**
-   * Creates a new merge request web resource.
-   *
-   * @param {string} path The path for the merge operation.
-   * @return {WebResource} A new WebResource with a merge operation for the given path.
-   */
-  static merge(path: string): WebResource;
-
-  /**
-   * Creates a new patch request web resource.
-   *
-   * @param {string} path The path for the patch operation.
-   * @return {WebResource} A new WebResource with a patch operation for the given path.
-   */
-  static patch(path: string): WebResource;
-
-  /**
-   * Specifies a custom property in the web resource.
-   *
-   * @param {string} name  The property name.
-   * @param {string} value The property value.
-   * @return {WebResource} The WebResource.
-   */
-  withProperty(name: string, value: string): WebResource;
-
-  /**
-   * Specifies if the response should be parsed or not.
-   *
-   * @param {bool} rawResponse true if the response should not be parse; false otherwise.
-   * @return {WebResource} The WebResource.
-   */
-  withRawResponse(rawResponse: boolean): WebResource;
-
-  withHeadersOnly(headersOnly: boolean): WebResource;
-
-  /**
-   * Adds an optional query string parameter.
-   *
-   * @param {Object} name          The name of the query string parameter.
-   * @param {Object} value         The value of the query string parameter.
-   * @param {Object} defaultValue  The default value for the query string parameter to be used if no value is passed.
-   * @return {Object} The web resource.
-   */
-  withQueryOption(name: any, value:  any, defaultValue:  any): WebResource;
-
-  /**
-   * Adds optional query string parameters.
-   *
-   * Additional arguments will be the needles to search in the haystack. 
-   *
-   * @param {Object} object  The haystack of query string parameters.
-   * @return {Object} The web resource.
-   */
-  withQueryOptions(object: { [option: string]: any; }): WebResource; 
-
-  /**
-   * Adds an optional header parameter.
-   *
-   * @param {Object} name  The name of the header parameter.
-   * @param {Object} value The value of the header parameter.
-   * @return {Object} The web resource.
-   */
-  withHeader(name: any, value: any): WebResource;
-
-  /**
-   * Adds an optional body.
-   *
-   * @param {Object} body  The request body.
-   * @return {Object} The web resource.
-   */
-  withBody(body: any): WebResource;
-
-  /**
-   * Adds optional query string parameters.
-   *
-   * Additional arguments will be the needles to search in the haystack. 
-   *
-   * @param {Object} object  The haystack of headers.
-   * @return {Object} The web resource.
-   */
-  withHeaders(object: { [header: string]: any; }): WebResource;
-  
-
-  addOptionalMetadataHeaders(metadata: { [header: string]: any; }): WebResource;
-
-  /**
-   * Determines if a status code corresponds to a valid response according to the WebResource's expected status codes.
-   *
-   * @param {int} statusCode The response status code.
-   * @return true if the response is valid; false otherwise.
-   */
-  validResponse(statusCode: number): boolean;
 
   /**
    * Hook up the given input stream to a destination output stream if the WebResource method

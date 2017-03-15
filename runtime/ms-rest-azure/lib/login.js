@@ -1,19 +1,20 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
-var adal= require('adal-node');
-var async = require('async');
-var util = require('util');
-var azureConstants = require('./constants');
-var ApplicationTokenCredentials = require('./credentials/applicationTokenCredentials');
-var DeviceTokenCredentials = require('./credentials/deviceTokenCredentials');
-var UserTokenCredentials = require('./credentials/userTokenCredentials');
-var AzureEnvironment = require('./azureEnvironment');
-var SubscriptionClient = require('azure-arm-resource').SubscriptionClient;
+'use strict';
+const adal= require('adal-node');
+const async = require('async');
+const util = require('util');
+const azureConstants = require('./constants');
+const ApplicationTokenCredentials = require('./credentials/applicationTokenCredentials');
+const DeviceTokenCredentials = require('./credentials/deviceTokenCredentials');
+const UserTokenCredentials = require('./credentials/userTokenCredentials');
+const AzureEnvironment = require('./azureEnvironment');
+const SubscriptionClient = require('azure-arm-resource').SubscriptionClient;
 
 // It will create a DeviceTokenCredentials object by default
 function _createCredentials(parameters) {
-  var options = {};
+  let options = {};
   options.environment = this.environment;
   options.domain = this.domain;
   options.clientId = this.clientId;
@@ -38,7 +39,7 @@ function _createCredentials(parameters) {
       options.tokenAudience = parameters.tokenAudience;
     }
   }
-  var credentials;
+  let credentials;
   if (UserTokenCredentials.prototype.isPrototypeOf(this)) {
     credentials = new UserTokenCredentials(options.clientId, options.domain, options.username, this.password, options);
   } else if (ApplicationTokenCredentials.prototype.isPrototypeOf(this)) {
@@ -50,11 +51,11 @@ function _createCredentials(parameters) {
 }
 
 function buildTenantList(credentials, callback) {
-  var tenants = [];
+  let tenants = [];
   if (credentials.domain && credentials.domain !== azureConstants.AAD_COMMON_TENANT) {
     return callback(null, [credentials.domain]);
   }
-  var client = new SubscriptionClient(credentials, credentials.environment.resourceManagerEndpointUrl);
+  let client = new SubscriptionClient(credentials, credentials.environment.resourceManagerEndpointUrl);
   client.tenants.list(function (err, result) {
     async.eachSeries(result, function (tenantInfo, cb) {
       tenants.push(tenantInfo.tenantId);
@@ -66,17 +67,17 @@ function buildTenantList(credentials, callback) {
 }
 
 function getSubscriptionsFromTenants(tenantList, callback) {
-  var self = this;
-  var subscriptions = [];
-  var userType = 'user';
-  var username = self.username;
+  let self = this;
+  let subscriptions = [];
+  let userType = 'user';
+  let username = self.username;
   if (ApplicationTokenCredentials.prototype.isPrototypeOf(self)) {
     userType = 'servicePrincipal';
     username = self.clientId;
   }
   async.eachSeries(tenantList, function (tenant, cb) {
-    var creds = _createCredentials.call(self, { domain: tenant });
-    var client = new SubscriptionClient(creds, creds.environment.resourceManagerEndpointUrl);
+    let creds = _createCredentials.call(self, { domain: tenant });
+    let client = new SubscriptionClient(creds, creds.environment.resourceManagerEndpointUrl);
     client.subscriptions.list(function (err, result) {
       if (!err) {
         if (result && result.length > 0) {
@@ -101,7 +102,7 @@ function getSubscriptionsFromTenants(tenantList, callback) {
 }
 
 function _turnOnLogging() {
-  var log = adal.Logging;
+  let log = adal.Logging;
   log.setLoggingOptions(
     {
       level : log.LOGGING_LEVEL.VERBOSE,
@@ -194,10 +195,10 @@ exports.interactive = function interactive(options, callback) {
   this.tokenCache = options.tokenCache;
   this.language = options.language;
   this.userCodeResponseLogger = options.userCodeResponseLogger;
-  var authorityUrl = this.environment.activeDirectoryEndpointUrl + this.domain;
+  let authorityUrl = this.environment.activeDirectoryEndpointUrl + this.domain;
   this.context = new adal.AuthenticationContext(authorityUrl, this.environment.validateAuthority, this.tokenCache);
-  var self = this;
-  var tenantList = [];
+  let self = this;
+  let tenantList = [];
   async.waterfall([
     //acquire usercode
     function (callback) {
@@ -222,7 +223,7 @@ exports.interactive = function interactive(options, callback) {
     },
     //get the list of tenants
     function (callback) {
-      var credentials = _createCredentials.call(self);
+      let credentials = _createCredentials.call(self);
       buildTenantList(credentials, callback);
     },
     //build the token cache by getting tokens for all the tenants. We will acquire token from adal only when a request is sent. This is good as we also need
@@ -279,8 +280,8 @@ exports.withUsernamePassword = function withUsernamePassword(username, password,
   if (!options.clientId) {
     options.clientId = azureConstants.DEFAULT_ADAL_CLIENT_ID;
   }
-  var creds;
-  var tenantList = [];
+  let creds;
+  let tenantList = [];
   try {
     creds = new UserTokenCredentials(options.clientId, options.domain, username, password, options);
   } catch (err) {
@@ -334,7 +335,7 @@ exports.withServicePrincipalSecret = function withServicePrincipalSecret(clientI
     callback = options;
     options = {};
   }
-  var creds;
+  let creds;
   try {
     creds = new ApplicationTokenCredentials(clientId, domain, secret, options);
   } catch (err) {
