@@ -10,7 +10,7 @@
  * @constructor
  */
 class HttpOperationResponse {
-  constructor(request, responses) {
+  constructor(request, response) {
     /**
      * Reference to the original request object.
      * [WebResource] object.
