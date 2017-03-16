@@ -151,7 +151,7 @@ class ApplicationTokenCredentials {
   signRequest(webResource, callback) {
     this.getToken(function (err, result) {
       if (err) return callback(err);
-      webResource.headers[Constants.HeaderConstants.AUTHORIZATION] = `${result.tokenType} ${result.accessToken}'`;
+      webResource.headers[Constants.HeaderConstants.AUTHORIZATION] = `${result.tokenType} ${result.accessToken}`;
       return callback(null);
     });
   }
