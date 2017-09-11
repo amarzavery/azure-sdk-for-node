@@ -332,6 +332,8 @@ function _getStatus(operationUrl, callback) {
  * 
  * @param {object} options - The parameter options used by ServiceClient
  *
+ * @param {string} options.apiVersion - The apiVersion that should be used by the client while sending the request.
+ * 
  * @param {string} [options.acceptLanguage] - Gets or sets the preferred language for the response. 
  * Default value is: 'en-US'.
  *  
@@ -360,6 +362,10 @@ class AzureServiceClient extends msRest.ServiceClient {
     this.acceptLanguage = 'en-US';
     this.generateClientRequestId = true;
     this.longRunningOperationRetryTimeout = 30;
+
+    if (options.apiVersion !== null && options.apiVersion !== undefined) {
+      this.apiVersion = options.apiVersion;
+    }
 
     if (options.acceptLanguage !== null && options.acceptLanguage !== undefined) {
       this.acceptLanguage = options.acceptLanguage;
