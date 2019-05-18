@@ -1,37 +1,44 @@
-# Microsoft Azure SDK for Node.js - ServicebusManagement
+---
+uid: azure-arm-sb
+summary: *content
 
-This project provides a Node.js package that makes it easy to manage Azure Servicebus Resources. Right now it supports:
-- **Node.js version: 6.x or higher**
+---
+**This SDK will be deprecated next year and will be replaced by a new TypeScript-based isomorphic SDK (found at https://www.npmjs.com/package/@azure/arm-servicebus) which works on Node.js and browsers.**
+**See https://aka.ms/azure-sdk-for-js-migration to learn more.**
+## Microsoft Azure SDK for Node.js - ServiceBusManagementClient
 
-## How to Install
+This project provides a Node.js package for accessing Azure. Right now it supports:
+- **Node.js version 6.x.x or higher**
+
+### Features
+
+
+### How to Install
 
 ```bash
 npm install azure-arm-sb
 ```
 
-## How to Use
+### How to use
 
-### Authentication, client creation and listing namespaces within a subscription as an example
+#### Authentication, client creation, and list operations as an example.
 
- ```javascript
- var msRestAzure = require('ms-rest-azure');
- var ServicebusManagement = require('azure-arm-sb');
- 
- // Interactive Login
- msRestAzure.interactiveLogin(function(err, credentials) {
-  var client = new ServicebusManagement(credentials, 'your-subscription-id');
-  client.namespaces.listBySubscription(function(err, namespaces, request, response) {
-    if (err) {
-      console.log(err);
-    } else {
-      namespaces.map(function (ns, index, array) {
-        console.log('found ns :' + ns.name);
-      }));
-    }
+```javascript
+const msRestAzure = require("ms-rest-azure");
+const ServiceBusManagementClient = require("azure-arm-sb");
+msRestAzure.interactiveLogin().then((creds) => {
+  const subscriptionId = "<Subscription_Id>";
+  const client = new ServiceBusManagementClient(creds, subscriptionId);
+
+  return client.operations.list().then((result) => {
+    console.log("The result is:");
+    console.log(result);
   });
- });
- ```
+}).catch((err) => {
+  console.log('An error occurred:');
+  console.dir(err, {depth: null, colors: true});
+});
+```
+### Related projects
 
-## Related projects
-
-- [Microsoft Azure SDK for Node.js - All-up](https://github.com/WindowsAzure/azure-sdk-for-node)
+- [Microsoft Azure SDK for Node.js](https://github.com/Azure/azure-sdk-for-node)
