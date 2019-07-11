@@ -416,7 +416,7 @@ function serializeDateTypes(typeName, value, objectName) {
  */
 exports.deserialize = function (mapper, responseBody, objectName) {
   if (responseBody === null || responseBody === undefined) {
-    if (mapper && mapper.defaultValue) {
+    if (mapper && mapper.defaultValue !== undefined) {
       responseBody = mapper.defaultValue;
     } else {
       return responseBody;
@@ -577,7 +577,7 @@ function deserializeCompositeType(mapper, responseBody, objectName) {
         if (Array.isArray(responseBody[key]) && modelProps[key].serializedName === '') {
           propertyInstance = responseBody[key];
           instance = exports.deserialize.call(this, propertyMapper, propertyInstance, propertyObjectName);
-        } else if ((propertyInstance !== null && propertyInstance !== undefined) || (propertyMapper && propertyMapper.defaultValue)) {
+        } else if ((propertyInstance !== null && propertyInstance !== undefined) || (propertyMapper && propertyMapper.defaultValue !== undefined)) {
           serializedValue = exports.deserialize.call(this, propertyMapper, propertyInstance, propertyObjectName);
           instance[key] = serializedValue;
         }
